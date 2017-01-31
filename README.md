@@ -24,10 +24,10 @@ A ordem de execução tem que ser a seguinte:
 Após executar esses scripts será necessário atualizar o arquivo "Web.Config" nas connectionStrings, informando o nome da máquina e a instancia do servidor SQL,
 como por exemplo: 
 
-"<add name="strConexao" connectionString="Data Source=Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=teste_taxweb;Data Source=JEFERSON-PC\SQLEXPRESS" />"
+< add name="strConexao" connectionString="Data Source=Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=teste_taxweb;Data Source=JEFERSON-PC\SQLEXPRESS" />
 
 
-"<add name="StringDeConexaoLog" connectionString="Data Source=Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=teste_taxweb;Data Source=JEFERSON-PC\SQLEXPRESS" />"
+< add name="StringDeConexaoLog" connectionString="Data Source=Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=teste_taxweb;Data Source=JEFERSON-PC\SQLEXPRESS" />
 
 É essencialmente fundamental que você atualize as duas connectionStrings.
 
