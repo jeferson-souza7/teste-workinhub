@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Upload de Arquivos";
+}
+
+@section css
+{
+    <link href="@Url.Content("~/Content/css/bootstrap-theme.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/js/fileUpload/css/jquery.fileupload.css")" rel="stylesheet" />
+}
+
+@using (Html.BeginForm("", "controler", FormMethod.Post, new { @class = "form-horizontal bucket-form", id = "frm_InserirArquivo" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Arquivos</legend>
+
+        <div class="form-group">
+
+            <span class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Add anexo...</span>
+                <input id="fileupload" type="file" name="files[]" multiple>
+            </span>
+            <br />
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    <span class="sr-only">0% complete</span>
+                </div>
+            </div>
+        </div>
+
+        @*<table id="footable-res3" class="demo" data-filter="#filter" data-filter-text-only="true" data-page-size="5">
+                <thead>
+                    <tr>
+                        <th data-toggle="true">
+                            Nome
+                        </th>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Tamanho
+                        </th>
+                        <th data-toggle="true"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Site.Areas.Painel.Helpers.SiteHelper.ObterAnexosPorAtendimentoId(Model != null ? Model.Id : Session["idAtendimento"] != null ? (int)Session["idAtendimento"] : 0))
+                    {
+                        <tr>
+                            <td><a href="#">@item.Nome</a></td>
+                            <td data-value="">
+                                @item.Tipo
+                            </td>
+                            <td data-value="">
+                                @item.Tamanho
+                            </td>
+
+                            <td data-value="78025368997" class="btn-group" style="width: 100%">
+                                <a target="_blank" href="~/Areas/Painel/Upload/Importacao/Arquivos/@item.Nome" class="btn btn-info" id="btnVisualizar">
+                                    Visualizar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="pagination pagination-centered"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>*@
+    </fieldset>
+}
+
+@section scripts
+{
+    <script src="@Url.Content("~/Content/js/fileUpload/js/vendor/jquery.ui.widget.js")"></script>
+    <script src="@Url.Content("~/Content/js/fileUpload/js/jquery.fileupload.js")"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var count = 1;
+
+            $('#fileupload').fileupload({
+                dataType: 'json',
+                url: '/Home/UploadFiles',
+                autoUpload: true,
+                done: function (e, data) {
+                    //$('.file_name').html(data.result.name);
+                    //$('.file_type').html(data.result.type);
+                    //$('.file_size').html(data.result.size);
+                    if (count == data.originalFiles.length) {
+                        location.reload();
+                    }
+                    count++;
+                }
+            }).on('fileuploadprogressall', function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('.progress .progress-bar').css('width', progress + '%');
+            });
+        });
+    </script>
+}
