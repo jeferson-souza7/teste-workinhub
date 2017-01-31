@@ -3,7 +3,7 @@ First evaluation of project Upload Files
 
 CONFIGURAÇÃO DO BANCO DE DADOS
 
-Dentro da pasta "Scripts" contém os arquivos necessários para efetuar a criação do banco, tabelas, e procedures.
+Dentro da pasta "Scripts" na raiz contém os arquivos necessários para efetuar a criação do banco, tabelas, e procedures.
 A ordem de execução tem que ser a seguinte:
 
 1 - create_database.sql
