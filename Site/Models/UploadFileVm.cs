@@ -66,7 +66,7 @@ namespace Site.Models
             return file;
         }
 
-        public static List<UploadFileVm> ParaViewModel(List<UploadFile> lstFile)
+        public static ICollection<UploadFileVm> ParaViewModel(ICollection<UploadFile> lstFile)
         {
             return lstFile.Select(file => ParaViewModel(file)).ToList();
         }

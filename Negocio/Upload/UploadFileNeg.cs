@@ -20,11 +20,10 @@ namespace Negocio.Upload
             _uplodRep = uplodRep;
         }
 
-        public void NormalizarDados(List<string> dados)
+        public List<Dominio.Upload.UploadFile> NormalizarDados(List<string> dados)
         {
             var lstUpload = new List<Dominio.Upload.UploadFile>();
-            //int qtdLinhas = dados.Count(linha => linha.Equals("NOVA LINHA"));
-            int qtdColunas = 6;
+            int qtdColunas = ConfigurationManager.AppSettings["PathRelative.Conferencia.Cabecalho"].ToString().Split(',').ToList<string>().Count;
             int count = 0;
 
             for (int i = 1; i <= (dados.Count / qtdColunas); i++)
@@ -51,21 +50,23 @@ namespace Negocio.Upload
 
                 lstUpload.Add(upload);
             }
+
+            return lstUpload;
         }
 
         public Dominio.Upload.UploadFile Inserir(List<string> dados)
         {
-            NormalizarDados(dados);
+            var listaNormalizada = NormalizarDados(dados);
+            var retorno = new Dominio.Upload.UploadFile();
 
-            if (true)
+            foreach (var upload in listaNormalizada)
             {
-                var upload = new Dominio.Upload.UploadFile();
-                return _uplodRep.Inserir(upload);
+                upload.Validado = true;
+                upload.DataCriacao = DateTime.Now;
+                retorno = _uplodRep.Inserir(upload);
             }
-            else
-            {
-                return null;
-            }
+
+            return retorno;
         }
 
         public ICollection<Dominio.Upload.UploadFile> ListarTodos()

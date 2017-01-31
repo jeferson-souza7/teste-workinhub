@@ -12,41 +12,69 @@ namespace Biblioteca.Componentes
     {
         public void Salvar(dynamic log)
         {
-            SqlConnection conexao = null;
-            SqlCommand comando = null;
+            #region modo 1
+            //SqlConnection conexao = null;
+            //SqlCommand comando = null;
 
-            try
+            //try
+            //{
+            //    conexao = new SqlConnection(LogConnection.ConnectionString("StringDeConexaoLog"));
+
+            //    conexao.Open();
+
+            //    comando = new SqlCommand("sp_Site_InserirLogErroAplicacao", conexao) { CommandType = CommandType.StoredProcedure };
+
+            //    comando.Parameters.AddWithValue("@XmlEnviado", log.XmlEnviado);
+            //    comando.Parameters.AddWithValue("@XmlRecebido", log.XmlRecebido);
+            //    comando.Parameters.AddWithValue("@Protocolo", log.Protocolo);
+            //    comando.Parameters.AddWithValue("@CodigoDoErro", log.CodigoDoErro);
+            //    comando.Parameters.AddWithValue("@MensagemDeErro", log.MensagemDeErro);
+            //    comando.Parameters.AddWithValue("@TipoDeErro", log.TipoDeErro);
+            //    comando.Parameters.AddWithValue("@MetodoDeChamadaInterno", log.MetodoDeChamadaInterno);
+
+            //    comando.ExecuteNonQuery();
+            //}
+
+            //finally
+            //{
+            //    if (comando != null) comando.Dispose();
+
+            //    if (conexao != null)
+            //    {
+            //        if (conexao.State != ConnectionState.Closed)
+            //            conexao.Close();
+
+            //        conexao.Dispose();
+            //    }
+            //}
+            #endregion
+
+            using (SqlConnection con = new SqlConnection(LogConnection.ConnectionString("StringDeConexaoLog")))
             {
-                conexao = new SqlConnection(LogConnection.ConnectionString("StringDeConexaoLog"));
+                con.Open();
 
-                conexao.Open();
-
-                comando = new SqlCommand("sp_InserirLogDeErro", conexao) { CommandType = CommandType.StoredProcedure };
-
-                comando.Parameters.AddWithValue("@pedidoId", log.PedidoId);
-                comando.Parameters.AddWithValue("@participanteId", log.ParticipanteId);
-                comando.Parameters.AddWithValue("@sku", log.Sku);
-                comando.Parameters.AddWithValue("@xmlEnviado", log.XmlEnviado);
-                comando.Parameters.AddWithValue("@xmlRecebido", log.XmlRecebido);
-                comando.Parameters.AddWithValue("@protocolo", log.Protocolo);
-                comando.Parameters.AddWithValue("@codigoDoErro", log.CodigoDoErro);
-                comando.Parameters.AddWithValue("@mensagemDeErro", log.MensagemDeErro);
-                comando.Parameters.AddWithValue("@tipoDeErro", log.TipoDeErro);
-                comando.Parameters.AddWithValue("@metodoDeChamadaInterno", log.MetodoDeChamadaInterno);
-                comando.Parameters.AddWithValue("@urlWs", log.UrlWs);
-
-                comando.ExecuteNonQuery();
-            }
-            finally
-            {
-                if (comando != null) comando.Dispose();
-
-                if (conexao != null)
+                using (var comando = con.CreateCommand())
                 {
-                    if (conexao.State != ConnectionState.Closed)
-                        conexao.Close();
+                    comando.Connection = con;
 
-                    conexao.Dispose();
+                    comando.CommandType = System.Data.CommandType.StoredProcedure;
+                    comando.CommandText = "sp_Site_InserirUploadFile";
+
+                    comando.Parameters.Add(new SqlParameter("@XmlEnviado", log.XmlEnviado));
+                    comando.Parameters.Add(new SqlParameter("@XmlRecebido", log.XmlRecebido));
+                    comando.Parameters.Add(new SqlParameter("@Protocolo", log.Protocolo));
+                    comando.Parameters.Add(new SqlParameter("@CodigoDoErro", log.CodigoDoErro));
+                    comando.Parameters.Add(new SqlParameter("@MensagemDeErro", log.MensagemDeErro));
+                    comando.Parameters.Add(new SqlParameter("@TipoDeErro", log.TipoDeErro));
+                    comando.Parameters.Add(new SqlParameter("@MetodoDeChamadaInterno", log.MetodoDeChamadaInterno));
+
+                    try
+                    {
+                        var result = comando.ExecuteReader();
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
             }
         }

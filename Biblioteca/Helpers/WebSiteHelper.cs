@@ -69,18 +69,18 @@ namespace Biblioteca.Helpers
                     for (int i = 0; i < array.Length; i++)
                     {
                         if (!linhaCabecalho.Contains(array[i].ToUpper()))
-                        {                            
+                        {
                             if (array[i].Contains("\n"))
                             {
                                 //array[i] = array[i].Substring(array[i].IndexOf("\n")).Replace("\n", "");
 
                                 var quebraDeLinha = array[i].Split('\n');
 
-                                if(quebraDeLinha.Contains("Fornecedor"))
+                                if (quebraDeLinha.Contains("Fornecedor"))
                                 {
                                     retorno.Add(quebraDeLinha[1]);
                                 }
-                                else if(quebraDeLinha.Length == 2)
+                                else if (quebraDeLinha.Length == 2)
                                 {
                                     retorno.Add(quebraDeLinha[0]);
                                     retorno.Add(quebraDeLinha[1]);

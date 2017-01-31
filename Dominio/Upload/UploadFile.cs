@@ -16,8 +16,11 @@ namespace Dominio.Upload
         public string Endereco { get; set; }
         public string Fornecedor { get; set; }
         public bool Validado { get; set; }
+        [Obsolete]
         public string Name { get; set; }
+        [Obsolete]
         public string Type { get; set; }
+        [Obsolete]
         public string Length { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataAtualizacao { get; set; }

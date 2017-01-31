@@ -35,7 +35,7 @@ namespace Repositorio.Upload
                         comando.Connection = con.Buscar();
 
                         comando.CommandType = System.Data.CommandType.StoredProcedure;
-                        comando.CommandText = "sp_Upload_Inserir";
+                        comando.CommandText = "sp_Site_InserirUploadFile";
 
                         comando.Parameters.Add(new SqlParameter("@Comprador", entity.Comprador));
                         comando.Parameters.Add(new SqlParameter("@Descricao", entity.Descricao));
@@ -43,12 +43,14 @@ namespace Repositorio.Upload
                         comando.Parameters.Add(new SqlParameter("@Quantidade", entity.Quantidade));
                         comando.Parameters.Add(new SqlParameter("@Endereco", entity.Endereco));
                         comando.Parameters.Add(new SqlParameter("@Fornecedor", entity.Fornecedor));
+                        comando.Parameters.Add(new SqlParameter("@Validado", entity.Validado));
+                        comando.Parameters.Add(new SqlParameter("@DataCriacao", entity.DataCriacao));
 
                         using (SqlDataReader reader = comando.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                retorno.Id = int.Parse(reader["UploadId"].ToString());
+                                retorno.Id = int.Parse(reader["UploadFileId"].ToString());
                                 retorno.Comprador = reader["Comprador"].ToString();
                                 retorno.Descricao = reader["Descricao"].ToString();
                                 retorno.PrecoUnitario = decimal.Parse(reader["PrecoUnitario"].ToString());
@@ -86,7 +88,7 @@ namespace Repositorio.Upload
                         comando.Connection = con.Buscar();
 
                         comando.CommandType = System.Data.CommandType.StoredProcedure;
-                        comando.CommandText = "sp_Upload_ListarTodos";
+                        comando.CommandText = "sp_Site_ListarTodosUploadsFiles";
 
                         using (SqlDataReader reader = comando.ExecuteReader())
                         {
@@ -94,7 +96,7 @@ namespace Repositorio.Upload
                             {
                                 retorno.Add(new Dominio.Upload.UploadFile()
                                 {
-                                    Id = int.Parse(reader["UploadId"].ToString()),
+                                    Id = int.Parse(reader["UploadFileId"].ToString()),
                                     Comprador = reader["Comprador"].ToString(),
                                     Descricao = reader["Descricao"].ToString(),
                                     PrecoUnitario = decimal.Parse(reader["PrecoUnitario"].ToString()),

@@ -5,6 +5,7 @@ using Site.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Site.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            return View();
+            return View(UploadFileVm.ParaViewModel(new UploadFileNeg(_uploadRep).ListarTodos()));
         }
 
         [HttpPost]
@@ -34,6 +35,7 @@ namespace Site.Controllers
         {
             var lstFileResult = new List<UploadFileVm>();
             var sucesso = false;
+            List<string> dadosArquivo = new List<string>();
 
             try
             {
@@ -51,24 +53,26 @@ namespace Site.Controllers
 
                             if (WebSiteHelper.SalvarArquivo(hpf, fileName, diretorio))
                             {
-                                List<string> dadosArquivo = WebSiteHelper.LerArquivo("PathRelative.Conferencia", "PathRelative.Conferencia.Cabecalho", fileName);
+                                dadosArquivo = WebSiteHelper.LerArquivo("PathRelative.Conferencia", "PathRelative.Conferencia.Cabecalho", fileName);
 
                                 new UploadFileNeg(_uploadRep).Inserir(dadosArquivo);
 
                                 sucesso = true;
+                                TempData["Mensagem"] = "[SUCESSO] Upload realizado com sucesso.";
                             }
                             else
                             {
-                                ViewBag.Mensagem = "Estamos com problema para salvar o arquivo, por favor reinicie o processo.";
+                                TempData["Mensagem"] = "[ERRO] Estamos com problema para salvar o arquivo, por favor reinicie o processo.";
                             }
                         }
+                        else
                         {
-                            ViewBag.Mensagem = "Selecione um arquivo com extensão .txt.";
+                            TempData["Mensagem"] = "[AVISO]Selecione um arquivo com extensão .txt.";
                         }
                     }
                     else
                     {
-                        ViewBag.Mensagem = "Selecione algum arquivo para realizar o upload.";
+                        TempData["Mensagem"] = "[AVISO] Selecione algum arquivo para realizar o upload.";
                     }
                 }
             }
@@ -76,17 +80,23 @@ namespace Site.Controllers
             {
                 dynamic log = new ExpandoObject();
 
-                log.Tipo = "Erro";
-                log.Exception = ex.Message;
-                log.StackTrace = ex.StackTrace;
-                log.Mensagem = string.Format("Erro ao tentar fazer o upload do arquivo do Atendimento. objeto Enviado: {0}", Environment.NewLine, new JavaScriptSerializer().Serialize(Request.Files));
+                log.XmlEnviado = ex;
+                log.XmlRecebido = null;
+                log.Protocolo = null;
+                log.CodigoDoErro = null;
+                log.MensagemDeErro = string.Format("Erro ao tentar fazer o upload do arquivo. objeto Enviado: {0}", Environment.NewLine, new JavaScriptSerializer().Serialize(Request.Files));
+                log.TipoDeErro = "Error";
+                log.MetodoDeChamadaInterno = new StackTrace(ex).GetFrame(0).GetMethod().Name;
 
                 this.Log.Salvar(log);
 
-                ViewBag.MsgAviso = "Perdão, estamos enfrentando problemas para efetuar o upload do arquivo, por favor reinicie o processo!";
+                TempData["Mensagem"] = "[ERRO] Perdão, estamos enfrentando problemas para efetuar o upload do arquivo, por favor reinicie o processo!";
             }
 
             //return Content("{\"name\":\"" + lstFileResult[0].Name + "\",\"type\":\"" + lstFileResult[0].Type + "\",\"size\":\"" + string.Format("{0} bytes", lstFileResult[0].Length) + "\"}", "application/json");
+            int qtdColunas = ConfigurationManager.AppSettings["PathRelative.Conferencia.Cabecalho"].ToString().Split(',').ToList<string>().Count;
+
+            TempData["TotalRegistro"] = (dadosArquivo.Count / qtdColunas);
 
             return Json(sucesso, JsonRequestBehavior.AllowGet);
         }

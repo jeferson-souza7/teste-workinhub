@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{AA19DBE0-849C-41D8-85A5-4A72D1BBCBDF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{E1D6EAB2-89FF-408C-AE44-5259AF1A7772}"
+	ProjectSection(SolutionItems) = preProject
+		Repositorio\Upload\UploadFileRep.cs = Repositorio\Upload\UploadFileRep.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominio", "Dominio\Dominio.csproj", "{EA567DD8-3A41-43A3-92DC-BD4293F3A834}"
 EndProject
